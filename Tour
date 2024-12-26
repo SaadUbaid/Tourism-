@@ -1,0 +1,134 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Tourist {
+private:
+    string name;
+    string contact;
+
+public:
+    void input() {
+        cout << "Enter tourist's name: ";
+        getline(cin, name);
+        cout << "Enter tourist's contact: ";
+        getline(cin, contact);
+    }
+
+    void display() const {
+        cout << "Name: " << name << ", Contact: " << contact << endl;
+    }
+
+    string getName() const { return name; }
+    string getContact() const { return contact; }
+};
+
+class Tour {
+private:
+    string destination;
+    int duration;
+    double price;
+
+public:
+    Tour(string dest, int dur, double pr) 
+        : destination(dest), duration(dur), price(pr) {}
+
+    void display() const {
+        cout << "Destination: " << destination 
+             << ", Duration: " << duration << " days"
+             << ", Price: $" << price << endl;
+    }
+
+    string getDestination() const { return destination; }
+    int getDuration() const { return duration; }
+    double getPrice() const { return price; }
+};
+
+class Booking {
+private:
+    Tourist tourist;
+    Tour tour;
+
+public:
+    Booking(Tour selectedTour) : tour(selectedTour) {}
+
+    void input() {
+        cout << "Enter details for the tourist:\n";
+        tourist.input();
+    }
+
+    void display() const {
+        cout << "Booking Details:\n";
+        tourist.display();
+        tour.display();
+    }
+};
+
+int main() {
+    vector<Booking> bookings;
+    vector<Tour> availableTours = {
+        Tour("Hunza Valley", 7, 500.0),
+        Tour("Swat Valley", 5, 400.0),
+        Tour("Skardu", 8, 600.0),
+        Tour("Naran",10,1000.0),
+        Tour("Kashmir",3,700.0),
+        Tour("Shogran",2,400.0),
+        Tour("Mushkpuri",1,200.0),
+        Tour("Fairy Meadows",15,20000.0)
+    };
+
+
+    int choice;
+
+    do {
+        cout << "\n--- Tourism Management System ---\n";
+        cout << "1. Display available tours\n";
+        cout << "2. Create a new booking\n";
+        cout << "3. Display all bookings\n";
+        cout << "4. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore();
+
+        if (choice == 1) {
+            cout << "\nAvailable Tours:\n";
+            for (size_t i = 0; i < availableTours.size(); i++) {
+                cout << i + 1 << ". ";
+                availableTours[i].display();
+            }
+        } 
+        else if (choice == 2) {
+            cout << "\nSelect a tour by number: ";
+            int tourChoice;
+            cin >> tourChoice;
+            cin.ignore();
+
+            if (tourChoice < 1 || tourChoice > availableTours.size()) {
+                cout << "Invalid selection! Try again.\n";
+            } else {
+                Booking newBooking(availableTours[tourChoice - 1]);
+                newBooking.input();
+                bookings.push_back(newBooking);
+                cout << "Booking created successfully!\n";
+            }
+        } 
+        else if (choice == 3) {
+            if (bookings.empty()) {
+                cout << "No bookings available.\n";
+            } else {
+                for (size_t i = 0; i < bookings.size(); i++) {
+                    cout << "\nBooking #" << i + 1 << ":\n";
+                    bookings[i].display();
+                }
+            }
+        } 
+        else if (choice != 4) {
+            cout << "Invalid choice! Please try again.\n";
+        }
+    } while (choice != 4);
+
+    cout << "Thank you for using the Tourism Management System!\n";
+    return 0;
+}
+
